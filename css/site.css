@@ -248,6 +248,21 @@ a[data-hover="link"]:hover .button_text-hover {
   position: absolute;
   top: 0;
   left: 0;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.preloader-spotlight {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(41, 178, 255, 0.09) 0%, rgba(0, 119, 255, 0.03) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 1s ease;
 }
 
 .preloader_background {
@@ -267,6 +282,7 @@ a[data-hover="link"]:hover .button_text-hover {
   height: 100%;
   display: flex;
   transform: rotate(54.1deg);
+  transition: transform 0.1s ease-out;
 }
 
 .preloader_stairs {
@@ -311,25 +327,89 @@ a[data-hover="link"]:hover .button_text-hover {
   100% { transform: scale(1) rotate(0deg); }
 }
 
+.preloader .position-relative {
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader_hud-rings {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) translateZ(-50px);
+  width: 38rem; height: 38rem;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+}
+
+.hud-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed var(--orange);
+  border-radius: 50%;
+  animation: rotateClockwise 25s linear infinite;
+}
+
+.hud-ring.ring-2 {
+  inset: 3rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(41, 178, 255, 0.15);
+  border-left-color: var(--orange);
+  border-right-color: var(--orange);
+  animation: rotateCounter 35s linear infinite;
+}
+
+.hud-ring.ring-3 {
+  inset: 6rem;
+  border: 1px dotted rgba(41, 178, 255, 0.3);
+  animation: rotateClockwise 50s linear infinite;
+}
+
+@keyframes rotateClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes rotateCounter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
 .preloader_text {
   text-align: center;
   white-space: nowrap;
   font-size: 2.5rem;
   font-weight: 300;
   color: var(--white);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 2;
   font-family: 'Oregon', Arial, sans-serif;
   letter-spacing: 0.08em;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(41, 178, 255, 0.2);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(41, 178, 255, 0.25);
+  transform: translateZ(50px);
+}
+
+.preloader_subtitle {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  font-family: 'Assistant', sans-serif;
+  letter-spacing: 0.3em;
+  color: var(--orange);
+  text-align: center;
+  opacity: 0;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(41, 178, 255, 0.4);
+  transform: translateZ(30px);
 }
 
 @media (min-width: 768px) {
   .preloader_text {
     font-size: 5.5rem;
+  }
+  .preloader_subtitle {
+    font-size: 0.85rem;
   }
 }
 
@@ -643,11 +723,12 @@ a[data-hover="link"]:hover .button_text-hover {
   position: absolute;
   bottom: 1.8125rem;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, color 0.3s;
 }
 
 .lock_group:hover .apply {
   opacity: 1;
+  color: var(--white);
 }
 
 /* ---------- FORM ---------- */

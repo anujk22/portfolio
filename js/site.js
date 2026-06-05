@@ -18,18 +18,20 @@ const WHEEL_COOLDOWN = 600;
 const $ = (s, p) => (p || document).querySelector(s);
 const $$ = (s, p) => [...(p || document).querySelectorAll(s)];
 
-const preloader    = $('.preloader');
-const screenParent = $('.screen_parent');
-const screens      = $$('.screen');
-const scrollEl     = $('.scroll');
-const scrollText1  = $('.scroll_text-1');
-const scrollText2  = $('.scroll_text-2');
-const bottomText4  = $('[data-scroll="bottom-4"]');
-const nameImg      = $('.name');
-const logoLink     = $('#logo-link');
-const lockBtn      = $('#lock-btn');
-const formWrapper  = $('.form_wrapper');
-const ball         = $('.image-ball');
+const preloader        = $('.preloader');
+const screenParent     = $('.screen_parent');
+const screens          = $$('.screen');
+const scrollEl         = $('.scroll');
+const scrollText1      = $('.scroll_text-1');
+const scrollText2      = $('.scroll_text-2');
+const bottomText4      = $('[data-scroll="bottom-4"]');
+const nameImg          = $('.name');
+const logoLink         = $('#logo-link');
+const lockBtn          = $('#lock-btn');
+const formWrapper      = $('.form_wrapper');
+const ball             = $('.image-ball');
+const preloaderSubtitle = $('.preloader_subtitle');
+const spotlight        = $('.preloader-spotlight');
 
 const topTexts = {
   1: $('[data-scroll="top-1"]'),
@@ -51,6 +53,45 @@ let mx = -100, my = -100, dx = -100, dy = -100;
 document.addEventListener('mousemove', e => {
   mx = e.clientX;
   my = e.clientY;
+  
+  // Preloader interactions
+  if (currentScreen === 0) {
+    // 1. Spotlight follow
+    if (spotlight) {
+      gsap.to(spotlight, {
+        left: e.clientX,
+        top: e.clientY,
+        duration: 0.6,
+        ease: "power2.out"
+      });
+    }
+    
+    // 2. 3D Parallax Tilt
+    const cx = e.clientX - window.innerWidth / 2;
+    const cy = e.clientY - window.innerHeight / 2;
+    const container = $('.preloader .position-relative');
+    if (container) {
+      gsap.to(container, {
+        rotateY: cx / 40,
+        rotateX: -cy / 40,
+        x: cx / 25,
+        y: cy / 25,
+        duration: 0.8,
+        ease: "power2.out"
+      });
+    }
+    
+    const stairs = $('.preloader_stairs-wrapper');
+    if (stairs) {
+      gsap.to(stairs, {
+        x: -cx / 50,
+        y: -cy / 50,
+        duration: 1,
+        ease: "power2.out"
+      });
+    }
+  }
+
   // Ball parallax
   if (ball && currentScreen === 1) {
     const bx = (e.clientX - innerWidth / 2) / 25;
@@ -130,8 +171,8 @@ Object.values(topTexts).forEach(el => el && splitIntoLetters(el));
 
 // ===== TOP-TEXT MAP =====
 function topTextFor(screen) {
-  if (screen <= 1) return 1;
-  return screen; // 2→2, 3→3, 4→4
+  if (screen === 0) return 0;
+  return screen; // 1→1, 2→2, 3→3, 4→4
 }
 
 // ===== TRANSITION HELPERS =====
@@ -239,15 +280,25 @@ function go(target) {
   if (from === 0 && target === 1) {
     // Slide preloader up with skew, reveal screens
     tl.to(preloader, { yPercent: -100, duration: DURATION, ease: EASE }, 0);
+    const container = $('.preloader .position-relative');
+    if (container) tl.to(container, { rotateX: 0, rotateY: 0, x: 0, y: 0, duration: 0.5 }, 0);
+    const stairs = $('.preloader_stairs-wrapper');
+    if (stairs) tl.to(stairs, { x: 0, y: 0, duration: 0.5 }, 0);
+    if (spotlight) tl.to(spotlight, { opacity: 0, duration: 0.5 }, 0);
+    if (loopTimeout) clearTimeout(loopTimeout);
     tl.add(screenIn(1), 0.5);
     tl.add(swapTopText(0, 1), 0.3);
     tl.add(swapScrollText(1), 0.4);
   }
   else if (from === 1 && target === 0) {
     tl.add(screenOut(1), 0);
+    if (spotlight) tl.to(spotlight, { opacity: 1, duration: 0.8 }, 0.4);
     tl.to(preloader, { yPercent: 0, duration: DURATION, ease: EASE }, 0.4);
     tl.add(swapTopText(1, 0), 0.3);
     tl.add(swapScrollText(0), 0.4);
+    tl.call(() => {
+      loopTimeout = setTimeout(loopSubtitles, 2000);
+    }, null, 1.2);
   }
   else {
     // Between content screens
@@ -307,6 +358,40 @@ lockBtn?.addEventListener('click', () => {
   if (ff) tl.fromTo(ff, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.2);
 });
 
+// ===== SUBTITLE ROTATOR =====
+const roles = [
+  "[ SOFTWARE ENGINEER ]",
+  "[ DATA SCIENTIST ]",
+  "[ AI PIPELINES ]",
+  "[ CREATIVE DEVELOPER ]"
+];
+let roleIdx = 0;
+let loopTimeout = null;
+
+function loopSubtitles() {
+  if (currentScreen !== 0) {
+    loopTimeout = setTimeout(loopSubtitles, 1000);
+    return;
+  }
+  
+  const tl = gsap.timeline({
+    onComplete: () => {
+      loopTimeout = setTimeout(loopSubtitles, 3500);
+    }
+  });
+  
+  if (preloaderSubtitle) {
+    tl.add(blurOut(preloaderSubtitle, { dur: 0.35, stagger: 0.01 }), 0);
+    tl.call(() => {
+      roleIdx = (roleIdx + 1) % roles.length;
+      preloaderSubtitle.textContent = roles[roleIdx];
+      splitIntoLetters(preloaderSubtitle);
+    }, null, 0.4);
+    tl.set(preloaderSubtitle, { opacity: 1 }, 0.42);
+    tl.add(blurIn(preloaderSubtitle, { dur: 0.5, stagger: 0.02 }), 0.45);
+  }
+}
+
 // ===== BOOT =====
 function init() {
   // Stack: preloader on top, screens behind
@@ -322,18 +407,37 @@ function init() {
   gsap.set(scrollText2, { opacity: 0 });
   if (bottomText4) gsap.set(bottomText4, { opacity: 0 });
 
-  // Top texts hidden except #1
+  // Top texts hidden
   Object.entries(topTexts).forEach(([k, el]) => {
-    if (el && k !== '1') gsap.set(el, { opacity: 0 });
+    if (el) gsap.set(el, { opacity: 0 });
   });
 
+  if (preloaderSubtitle) {
+    splitIntoLetters(preloaderSubtitle);
+    gsap.set(preloaderSubtitle, { opacity: 0 });
+  }
+
+  // Spotlight reveal
+  if (spotlight) {
+    gsap.to(spotlight, { opacity: 1, duration: 1.5, delay: 0.5 });
+  }
+
   // Intro timeline
-  const intro = gsap.timeline({ delay: 0.3 });
+  const intro = gsap.timeline({ 
+    delay: 0.3,
+    onComplete: () => {
+      // Start subtitle looping
+      loopTimeout = setTimeout(loopSubtitles, 3000);
+    }
+  });
   const pt = $('.preloader_text');
   if (pt) intro.add(blurIn(pt, { dur: 0.7, stagger: 0.035 }), 0.4);
-  if (topTexts[1]) intro.add(blurIn(topTexts[1], { dur: 0.5, stagger: 0.025 }), 1.2);
-  intro.to(scrollEl, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 2.2);
-  intro.to(scrollText1, { opacity: 1, duration: 0.4 }, 2.2);
+  if (preloaderSubtitle) {
+    intro.set(preloaderSubtitle, { opacity: 1 }, 1.1);
+    intro.add(blurIn(preloaderSubtitle, { dur: 0.5, stagger: 0.02 }), 1.12);
+  }
+  intro.to(scrollEl, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 2.0);
+  intro.to(scrollText1, { opacity: 1, duration: 0.4 }, 2.0);
 }
 
 if (document.readyState === 'loading') {
