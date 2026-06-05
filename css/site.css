@@ -314,7 +314,7 @@ a[data-hover="link"]:hover .button_text-hover {
 .preloader_text {
   text-align: center;
   white-space: nowrap;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 300;
   color: var(--white);
   position: absolute;
@@ -323,12 +323,13 @@ a[data-hover="link"]:hover .button_text-hover {
   transform: translate(-50%, -50%);
   z-index: 2;
   font-family: 'Oregon', Arial, sans-serif;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(41, 178, 255, 0.2);
 }
 
 @media (min-width: 768px) {
   .preloader_text {
-    font-size: 4rem;
+    font-size: 5.5rem;
   }
 }
 
@@ -947,9 +948,10 @@ a[data-hover="link"]:hover .button_text-hover {
 }
 
 /* Desktop Styles Overrides */
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .screen {
-    max-width: 58rem;
+    max-width: 85rem;
+    width: 95%;
   }
   
   .about-grid {
@@ -961,26 +963,37 @@ a[data-hover="link"]:hover .button_text-hover {
   
   .projects-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     margin-top: 2.5rem;
+    width: 100%;
   }
   
   .experience-container {
     margin-top: 2.5rem;
+    width: 100%;
   }
   
   .timeline {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    width: 100%;
   }
   
   .glass-card h3 {
-    font-size: 1.65rem;
+    font-size: 1.4rem;
+  }
+
+  .glass-card h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   
   .glass-card p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
