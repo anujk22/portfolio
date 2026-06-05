@@ -180,28 +180,15 @@ function screenIn(n) {
   const headings = $$('[data-animation="blur"]', s);
   headings.forEach((h, i) => tl.add(blurIn(h, { dur: 0.55, stagger: 0.025 }), 0.1 + i * 0.25));
 
-  if (n === 1) {
-    const lines = $$('.text-lines-1 > div', s);
-    const bw = $('.image-ball-wrapper', s);
-    const bt = $('.screen1-body-text', s);
-    lines.forEach((l, i) => tl.fromTo(l, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45 }, 0.7 + i * 0.12));
-    if (bw) tl.fromTo(bw, { opacity: 0 }, { opacity: 1, duration: 0.7 }, 0.5);
-    if (bt) tl.fromTo(bt, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5 }, 1.1);
+  const cards = $$('.glass-card', s);
+  if (cards.length > 0) {
+    tl.fromTo(cards, 
+      { opacity: 0, y: 30 }, 
+      { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out', stagger: 0.12 }, 
+      0.5
+    );
   }
-  if (n === 2) {
-    const lines = $$('.text-lines-1 > div', s);
-    const stairs = $('.image-stairs', s);
-    lines.forEach((l, i) => tl.fromTo(l, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45 }, 0.7 + i * 0.12));
-    if (stairs) tl.fromTo(stairs, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.7 }, 0.55);
-  }
-  if (n === 3) {
-    const gts = $$('.text-grid_text', s);
-    const pl = $('.image_player', s);
-    const t0 = $('.text-0', s);
-    gts.forEach((t, i) => tl.fromTo(t, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.4 }, 0.7 + i * 0.1));
-    if (pl) tl.fromTo(pl, { opacity: 0 }, { opacity: 1, duration: 0.65 }, 0.55);
-    if (t0) tl.fromTo(t0, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 }, 0.9);
-  }
+
   if (n === 4) {
     const lg = $('.lock_group', s);
     const ht1 = $('.heading-text-1', s);
@@ -221,28 +208,11 @@ function screenOut(n) {
   const headings = $$('[data-animation="blur"]', s);
   headings.forEach((h, i) => tl.add(blurOut(h, { dur: 0.3, stagger: 0.012 }), i * 0.08));
 
-  if (n === 1) {
-    const bw = $('.image-ball-wrapper', s);
-    const lines = $$('.text-lines-1 > div', s);
-    const bt = $('.screen1-body-text', s);
-    if (bw) tl.to(bw, { opacity: 0, duration: 0.35 }, 0.15);
-    lines.forEach((l, i) => tl.to(l, { opacity: 0, y: -12, duration: 0.25 }, 0.08 + i * 0.04));
-    if (bt) tl.to(bt, { opacity: 0, y: -8, duration: 0.25 }, 0.25);
+  const cards = $$('.glass-card', s);
+  if (cards.length > 0) {
+    tl.to(cards, { opacity: 0, y: -20, duration: 0.35, stagger: 0.05 }, 0);
   }
-  if (n === 2) {
-    const stairs = $('.image-stairs', s);
-    const lines = $$('.text-lines-1 > div', s);
-    if (stairs) tl.to(stairs, { opacity: 0, filter: 'blur(10px)', duration: 0.35 }, 0.15);
-    lines.forEach((l, i) => tl.to(l, { opacity: 0, y: 12, duration: 0.25 }, 0.08 + i * 0.04));
-  }
-  if (n === 3) {
-    const gts = $$('.text-grid_text', s);
-    const pl = $('.image_player', s);
-    const t0 = $('.text-0', s);
-    gts.forEach((t, i) => tl.to(t, { opacity: 0, y: 12, duration: 0.25 }, 0.08 + i * 0.04));
-    if (pl) tl.to(pl, { opacity: 0, duration: 0.35 }, 0.15);
-    if (t0) tl.to(t0, { opacity: 0, y: 12, duration: 0.25 }, 0.25);
-  }
+
   if (n === 4) {
     const lg = $('.lock_group', s);
     const ht1 = $('.heading-text-1', s);
