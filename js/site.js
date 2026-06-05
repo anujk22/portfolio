@@ -285,7 +285,7 @@ function go(target) {
     const stairs = $('.preloader_stairs-wrapper');
     if (stairs) tl.to(stairs, { x: 0, y: 0, duration: 0.5 }, 0);
     if (spotlight) tl.to(spotlight, { opacity: 0, duration: 0.5 }, 0);
-    if (loopTimeout) clearTimeout(loopTimeout);
+    tl.to('.overlay_top-center', { opacity: 1, visibility: 'visible', duration: 0.5 }, 0.3);
     tl.add(screenIn(1), 0.5);
     tl.add(swapTopText(0, 1), 0.3);
     tl.add(swapScrollText(1), 0.4);
@@ -294,11 +294,9 @@ function go(target) {
     tl.add(screenOut(1), 0);
     if (spotlight) tl.to(spotlight, { opacity: 1, duration: 0.8 }, 0.4);
     tl.to(preloader, { yPercent: 0, duration: DURATION, ease: EASE }, 0.4);
+    tl.to('.overlay_top-center', { opacity: 0, visibility: 'hidden', duration: 0.5 }, 0.3);
     tl.add(swapTopText(1, 0), 0.3);
     tl.add(swapScrollText(0), 0.4);
-    tl.call(() => {
-      loopTimeout = setTimeout(loopSubtitles, 2000);
-    }, null, 1.2);
   }
   else {
     // Between content screens
@@ -359,38 +357,7 @@ lockBtn?.addEventListener('click', () => {
 });
 
 // ===== SUBTITLE ROTATOR =====
-const roles = [
-  "[ SOFTWARE ENGINEER ]",
-  "[ DATA SCIENTIST ]",
-  "[ AI PIPELINES ]",
-  "[ CREATIVE DEVELOPER ]"
-];
-let roleIdx = 0;
-let loopTimeout = null;
-
-function loopSubtitles() {
-  if (currentScreen !== 0) {
-    loopTimeout = setTimeout(loopSubtitles, 1000);
-    return;
-  }
-  
-  const tl = gsap.timeline({
-    onComplete: () => {
-      loopTimeout = setTimeout(loopSubtitles, 3500);
-    }
-  });
-  
-  if (preloaderSubtitle) {
-    tl.add(blurOut(preloaderSubtitle, { dur: 0.35, stagger: 0.01 }), 0);
-    tl.call(() => {
-      roleIdx = (roleIdx + 1) % roles.length;
-      preloaderSubtitle.textContent = roles[roleIdx];
-      splitIntoLetters(preloaderSubtitle);
-    }, null, 0.4);
-    tl.set(preloaderSubtitle, { opacity: 1 }, 0.42);
-    tl.add(blurIn(preloaderSubtitle, { dur: 0.5, stagger: 0.02 }), 0.45);
-  }
-}
+// Removed to keep static subtitle "PERSONAL PORTFOLIO"
 
 // ===== BOOT =====
 function init() {
@@ -424,11 +391,7 @@ function init() {
 
   // Intro timeline
   const intro = gsap.timeline({ 
-    delay: 0.3,
-    onComplete: () => {
-      // Start subtitle looping
-      loopTimeout = setTimeout(loopSubtitles, 3000);
-    }
+    delay: 0.3
   });
   const pt = $('.preloader_text');
   if (pt) intro.add(blurIn(pt, { dur: 0.7, stagger: 0.035 }), 0.4);

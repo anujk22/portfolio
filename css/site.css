@@ -103,13 +103,8 @@ body {
   display: flex;
   position: fixed;
   transform: translate(-50%);
-}
-
-.overlay_bottom-left {
-  left: var(--padding);
-  bottom: var(--padding);
-  z-index: 15;
-  position: fixed;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .overlay_bottom-center {
@@ -253,16 +248,7 @@ a[data-hover="link"]:hover .button_text-hover {
 }
 
 .preloader-spotlight {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 60vw; height: 60vw;
-  background: radial-gradient(circle, rgba(41, 178, 255, 0.09) 0%, rgba(0, 119, 255, 0.03) 40%, transparent 70%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1;
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 1s ease;
+  display: none;
 }
 
 .preloader_background {
@@ -336,13 +322,7 @@ a[data-hover="link"]:hover .button_text-hover {
 }
 
 .preloader_hud-rings {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) translateZ(-50px);
-  width: 38rem; height: 38rem;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.12;
+  display: none;
 }
 
 .hud-ring {
@@ -387,21 +367,37 @@ a[data-hover="link"]:hover .button_text-hover {
   z-index: 2;
   font-family: 'Oregon', Arial, sans-serif;
   letter-spacing: 0.08em;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(41, 178, 255, 0.25);
   transform: translateZ(50px);
 }
 
 .preloader_subtitle {
   margin-top: 1.5rem;
-  font-size: 0.75rem;
+  font-size: 1.15rem;
   font-family: 'Assistant', sans-serif;
   letter-spacing: 0.3em;
-  color: var(--orange);
+  background-image: linear-gradient(180deg, #ffffff, var(--mocco));
+  color: var(--white);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
   text-align: center;
   opacity: 0;
   font-weight: 700;
-  text-shadow: 0 0 10px rgba(41, 178, 255, 0.4);
   transform: translateZ(30px);
+}
+
+.preloader_subtitle[aria-label] {
+  background-image: unset;
+  -webkit-text-fill-color: unset;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+
+.preloader_subtitle .gsap_split_letter {
+  background-image: linear-gradient(180deg, #ffffff, var(--mocco));
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 @media (min-width: 768px) {
@@ -409,14 +405,14 @@ a[data-hover="link"]:hover .button_text-hover {
     font-size: 5.5rem;
   }
   .preloader_subtitle {
-    font-size: 0.85rem;
+    font-size: 1.45rem;
   }
 }
 
 /* ---------- HEADING (GRADIENT TEXT) ---------- */
 .heading {
-  background-image: linear-gradient(180deg, var(--hot-orange), #002244);
-  color: var(--hot-orange);
+  background-image: linear-gradient(180deg, #ffffff, var(--mocco));
+  color: var(--white);
   letter-spacing: normal;
   white-space: nowrap;
   -webkit-text-fill-color: transparent;
@@ -439,7 +435,7 @@ a[data-hover="link"]:hover .button_text-hover {
 
 /* Apply gradient to individual letters */
 .heading .gsap_split_letter {
-  background-image: linear-gradient(180deg, var(--hot-orange), #002244);
+  background-image: linear-gradient(180deg, #ffffff, var(--mocco));
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
