@@ -1,2 +1,0 @@
-function initOdometer(){const el=document.getElementById("odometer"),od=new Odometer({el,value:0,duration:3e3});requestAnimationFrame(()=>{animateStepped(od,0,100,3e3,5)})}function animateStepped(od,from,to,duration,step){let current=from;const stepsCount=Math.ceil((to-from)/step),stepMs=Math.max(16,Math.floor(duration/stepsCount)),timer=setInterval(()=>{current=Math.min(to,current+step),od.update(current),current>=to&&clearInterval(timer)},stepMs)}
-//# sourceMappingURL=/cdn/shop/t/4/assets/web-index.js.map?v=177838241952941103231773309973
